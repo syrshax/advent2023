@@ -26,6 +26,7 @@ func giveNumber(lines [][]byte) []string {
 	var right, left string
 	var tempWord string
 
+	//this is how maps are done, the sintax...
 	m := make(map[string]int)
 	m["one"] = 1
 	m["two"] = 2
@@ -49,10 +50,10 @@ func giveNumber(lines [][]byte) []string {
 
 			if isLetter(l[i]) {
 				tempWord += string(l[i])
-				fmt.Println("Asi va la letra: - ", tempWord)
+				//with this sintax, we search into the map key:val,
+				//then we compare if tempWord contains the key assosiated
 				for key, val := range m {
 					if strings.Contains(tempWord, key) {
-						fmt.Println("Habemus cosas encontradas, ", tempWord, val)
 						right = strconv.Itoa(val)
 						tempWord = ""
 						break normal
@@ -69,10 +70,10 @@ func giveNumber(lines [][]byte) []string {
 			}
 			if isLetter(l[i]) {
 				tempWord = string(l[i]) + tempWord
-				fmt.Println("Asi va la letra: - ", tempWord)
+				//with this sintax, we search into the map key:val,
+				//then we compare if tempWord contains the key assosiated
 				for key, val := range m {
 					if strings.Contains(tempWord, key) {
-						fmt.Println("Habemus cosas encontradas, ", tempWord, val)
 						left = strconv.Itoa(val)
 						tempWord = ""
 						break reverse
@@ -81,10 +82,10 @@ func giveNumber(lines [][]byte) []string {
 			}
 		}
 		combination := right + left
-		right = ""
-		left = ""
 		results = append(results, combination)
 		combination = ""
+		left = ""
+		right = ""
 	}
 	fmt.Println("This is the final results!", results)
 
@@ -105,7 +106,7 @@ func arraySum(str []string) int {
 
 }
 func main() {
-	data, err := os.ReadFile("input1.txt")
+	data, err := os.ReadFile("input.txt")
 	fmt.Println(data)
 	check(err)
 	answer := arraySum(giveNumber(bytes.Split(data, []byte("\n"))))
