@@ -53,9 +53,8 @@ func main() {
 		var listDigits []string
 		var listColor []string
 
-
-	slicedLineForloop:
 		for i := 0; i < len(slicedLine[1]); i++ {
+			fmt.Println("Content Array:       ", string(slicedLine[1][i]))
 			if isDigit(slicedLine[1][i]) {
 				digits += string(slicedLine[1][i])
 			}
@@ -63,16 +62,15 @@ func main() {
 				color += string(slicedLine[1][i])
 				fmt.Println("Good!", color)
 			}
-			if slicedLine[1][i]) == ',' {
-				listDigits = strings.append(listDigits, digits)
-			}
-			if slicedLine[1][i] == ';' {
-				fmt.Println("This is the digits of array: ", digits)
-				fmt.Println("This si the color of the array: ", color)
+			if slicedLine[1][i] == ',' || slicedLine[1][i] == ';' {
+				listDigits = append(listDigits, digits)
+				listColor = append(listColor, color)
 				digits = ""
 				color = ""
-				break slicedLineForloop
 			}
 		}
+
+		fmt.Println("Lista de digitos: ", listDigits)
+		fmt.Println("Lista de colores: ", listColor)
 	}
 }
