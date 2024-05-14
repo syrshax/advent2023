@@ -14,6 +14,12 @@ func isDigit(byte byte) bool {
 func isLetter(byte byte) bool {
 	return ((byte >= 'a' && byte <= 'z') || (byte >= 'A' && byte <= 'Z'))
 }
+func isComma(byte byte) bool {
+	return byte == ','
+}
+func isOtherTurn(byte byte) bool {
+	return byte == ';'
+}
 
 func main() {
 	file, err := os.Open("input.txt")
@@ -29,48 +35,112 @@ func main() {
 	}
 	file.Close()
 
-	var counter int
+	var counter string
 	var slicedLine []string //Game 1 [0] || 2 red, 3 blue, 4 green [1]
 
 	m := make(map[string]int)
 	m["red"] = 0
 	m["blue"] = 0
 	m["green"] = 0
+	var gameIDpossible []string
+	var sumgame int
 
 	for _, lines := range fileLines {
 
 		slicedLine = strings.Split(lines, ":")
-		fmt.Println(slicedLine[0][4:]) //ignore Game and get only the integer part
-		counter, err = strconv.Atoi(slicedLine[0][5:])
-		if err != nil {
-			fmt.Println("Give me error code: ", err)
-		}
-		fmt.Println("Counter measures!: -", counter)
-		fmt.Println("Array", slicedLine[1])
+		counter = slicedLine[0][5:]
 
 		var digits string
 		var color string
 		var listDigits []string
 		var listColor []string
+		problemColors := []string{"red", "green", "blue"}
+		var colorResult []string
+		var digitsResult []string
+		max_red := 12
+		max_green := 13
+		max_blue := 14
+		var possibleGame bool
+		possibleGame = false
 
+	GameCounter:
 		for i := 0; i < len(slicedLine[1]); i++ {
-			fmt.Println("Content Array:       ", string(slicedLine[1][i]))
+
 			if isDigit(slicedLine[1][i]) {
 				digits += string(slicedLine[1][i])
 			}
 			if isLetter(slicedLine[1][i]) {
 				color += string(slicedLine[1][i])
-				fmt.Println("Good!", color)
 			}
-			if slicedLine[1][i] == ',' || slicedLine[1][i] == ';' {
+			if isComma(slicedLine[1][i]) {
 				listDigits = append(listDigits, digits)
 				listColor = append(listColor, color)
 				digits = ""
 				color = ""
 			}
+			if isOtherTurn(slicedLine[1][i]) || i == len(slicedLine[1])-1 {
+				listDigits = append(listDigits, digits)
+				listColor = append(listColor, color)
+				digits = ""
+				color = ""
+				for i := 0; i < len(listColor); i++ {
+					for _, substring := range problemColors {
+						if strings.Contains(listColor[i], substring) {
+							colorResult = append(colorResult, listColor[i])
+							digitsResult = append(digitsResult, listDigits[i])
+						}
+					}
+				}
+			}
+
+			for i := 0; i < len(colorResult); i++ {
+				if colorResult[i] == "red" {
+					numb1, err := strconv.Atoi(digitsResult[i])
+					fmt.Println("error sir", digitsResult[i], err)
+					if numb1 > max_red {
+						possibleGame = false
+						break GameCounter
+					}
+					possibleGame = true
+				}
+				if colorResult[i] == "blue" {
+					numb1, err := strconv.Atoi(digitsResult[i])
+					fmt.Println("error sir", digitsResult[i], err)
+					if numb1 > max_blue {
+						possibleGame = false
+						break GameCounter
+					}
+					possibleGame = true
+				}
+				if colorResult[i] == "green" {
+					numb1, err := strconv.Atoi(digitsResult[i])
+					fmt.Println("error sir", digitsResult[i], err)
+					if numb1 > max_green {
+						possibleGame = false
+						break GameCounter
+					}
+					possibleGame = true
+				}
+			}
+		}
+		if possibleGame {
+			gameIDpossible = append(gameIDpossible, counter)
 		}
 
 		fmt.Println("Lista de digitos: ", listDigits)
 		fmt.Println("Lista de colores: ", listColor)
+		fmt.Println("Possible games ID's: ", gameIDpossible)
 	}
+	for _, gameid := range gameIDpossible {
+		numbergame, err := strconv.Atoi(gameid)
+		fmt.Println("numbergame", numbergame)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("the sumgame?", sumgame)
+		sumgame = sumgame + numbergame
+
+	}
+
+	fmt.Println("The sum of games possble ID's are: ", sumgame)
 }
