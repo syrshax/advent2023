@@ -12,7 +12,7 @@ type Data struct {
 }
 
 type Engine struct {
-	Pieces int
+	Pieces []string
 	Number string
 }
 
@@ -53,10 +53,11 @@ func parseInput(filename string) (*Data, error) {
 				if isDigit(line[actual]) {
 					e.Number += string(line[actual])
 				}
+				e.Pieces = append(e.Pieces, e.Number)
 				e.Number = ""
 			}
-			fmt.Println("Number", string(e.Number))
 		}
+		fmt.Println("Number2", e.Pieces)
 	}
 	return d, nil
 }
